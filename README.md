@@ -1,2 +1,7 @@
 # DeepLearningProj2
-The repo for the second project of CS499 Deep Learning
+The repository for Deep Learning Project 2 Spring 2020
+
+
+
+Install these libraries for RStudio using install.packages()
+* tbd
