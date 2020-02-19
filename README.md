@@ -2,5 +2,7 @@
 The repository for Deep Learning Project 2 Spring 2020
 
 Install these libraries for RStudio using install.packages()
-* ggplot
+* ggplot2
 * class
+* data.table
+* weightedROC
