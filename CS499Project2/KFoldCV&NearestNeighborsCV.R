@@ -30,7 +30,7 @@ KFoldCV <- function( X_mat, y_vec, ComputePredictions, fold_vec )
 
 
 
-NearestNeighborsCV( X_mat, y_vec, X_new, num_folds = 5, max_neighbors = 20 )
+NearestNeighborsCV <- function( X_mat, y_vec, X_new, num_folds = 5, max_neighbors = 20 )
 {
   #initialize validation_fold_vec for later categorizing into folds
   validation_fold_vec <- sample( rep( 1:num_folds, l = nrow(X_mat) ) )
