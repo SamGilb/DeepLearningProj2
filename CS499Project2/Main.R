@@ -1,4 +1,5 @@
 
+
 main <- function()
 {
   #initialization
@@ -21,6 +22,9 @@ main <- function()
   #make test_fold_vec for later use
   test_fold_vec <- sample( rep( 1:4, l = length(y_vec) ) )
   
+  X_new <- X_mat[ test_fold_vec == 1, ]
+  y_new <- y_vec[ test_fold_vec == 1 ]
+  
   #############################################################################
   #                         Plotting line graph(S)                            #
   #############################################################################
@@ -37,13 +41,20 @@ main <- function()
   #plot (which.min(mean_error_vec), min(mean_error_vec))
   #make sure labels are good
   #put in legend
-  
+  neighbors <- 1:20
   validation.numneighbors<-ggplot()+
-    geom_line(aes(x=neighbors, y=percent.error, data= mean_error_vec),size=2)+#data may change might create a labeled table
-    geom_point(aes(x=which.min(mean_error_vec),min(mean_error_vec)))+#concludes project min
-    geom_line(aes(x=neighbors, y=percent.error, data=error_mat, group=fold))# need to create table from error_mat use as data
-    #alternative extract a vector and graph for each fold
+    geom_line(aes(x=neighbors, y=mean_error_vec),size=2)+#data may change might create a labeled table
+    geom_point(aes(x=which.min(mean_error_vec),min(mean_error_vec), color = 'red', size = 2))+
+    geom_line(aes(x=neighbors, y = error_mat[1,]))+
+    geom_line(aes(x=neighbors, y = error_mat[2,]))+
+    geom_line(aes(x=neighbors, y = error_mat[3,]))+
+    geom_line(aes(x=neighbors, y = error_mat[4,]))+
+    geom_line(aes(x=neighbors, y = error_mat[5,]))
+    #+#concludes project min
+    #geom_line(aes(x=neighbors, y=percent.error, data=error_mat, group=fold))# need to create table from error_mat use as data
+  #alternative extract a vector and graph for each fold
     
+  print(validation.numneighbors)
   #############################################################################
   #                              Table for PDF                                #
   #############################################################################
@@ -63,7 +74,7 @@ main <- function()
                    table(third_fold_labels)[[2]],
                    table(fourth_fold_labels)[[1]],
                    table(fourth_fold_labels)[[2]]
-  )
+                   )
   #create table matrix
   table <- matrix( table_data, 4, 2, byrow = TRUE )
   #edit table names
@@ -82,51 +93,54 @@ main <- function()
   baseline_error_vec <- KFoldCV( X_mat,
                                  y_vec,
                                  ComputePredictions = function( X_train, y_train, X_new )
-                                 {
-                                   #calculate pred_new
-                                   pred_new <- replicate( nrow(X_new), 0 )
-                                   
-                                   #return
-                                   pred_new
-                                 },
+                                                      {
+                                                        #calculate pred_new
+                                                        pred_new <- replicate( nrow(X_new), 0 )
+                                              
+                                                        #return
+                                                        pred_new
+                                                      },
                                  test_fold_vec )
+  #create respective dotplot
+  baseline.dot.plot<-ggplot()+
+    geom_point(aes(x=1:4, y=baseline_error_vec))
+  #display
+  print(baseline.dot.plot)
   
   #calc error using NN algorithm
   NN_error_vec <- KFoldCV( X_mat,
                            y_vec,
                            ComputePredictions = function( X_train, y_train, X_new )
-                           {
-                             #calculate and access pred_new
-                             NearestNeighborsCV( X_train, y_vec, X_new )[[1]]
-                           },
+                                                {
+                                                  #calculate and access pred_new
+                                                  NearestNeighborsCV( X_train, y_train, X_new )[[1]]
+                                                },
                            test_fold_vec )
+  
+  #create respective dotplot
+  NN.dot.plot<-ggplot()+
+    geom_point(aes(x=1:4, y=NN_error_vec))
+  
+  #display
+  print(NN.dot.plot)
   
   #calc error using knn with k = 1
   knn_error_vec <- KFoldCV( X_mat,
                             y_vec,
-                            ComputePredictions = function( X_train, y_train, X_new )
-                            {
-                              #calculate and pred_new using knn
-                              knn( X_train, X_new, y_vec )
-                            },
+                            ComputePredictions = function( X_train, y_vec, X_new )
+                                                 {
+                                                   #calculate and pred_new using knn
+                                                   knn( X_train, X_new, y_vec )
+                                                 },
                             test_fold_vec
-  )
+                            )
   
-  #plot this stuff!!!!!!
-dot.plot<-ggplot()+
-        geom_point(aes(x=error, y=algo),data=)#table created from error vec of each algorithm
-                     #allternative plot each vector geom_point(aes(x=error, y=value to space),data= selected vector)+
-                     #original is better strategy  
-  
-  
-  
-  
-  #lol wtf
-  #X_mat <- import_data[,1:(ncol(import_data) - 1)]
-  
-  #THIS LINE DOES NOT WORK DO NOT USE THIS LINE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  #DONT DO IT MAN
-  #ask hocking why this doesnt work
-  #y_vec <- import_data[,ncol(import_data)]
-  #y_vec <- import_data[,58]
+  #create respective dotplot
+  knn.dot.plot<-ggplot()+
+    geom_point(aes(x=1:4, y=knn_error_vec)) 
+
+  #display
+  print(knn.dot.plot)
 }
+
+main()

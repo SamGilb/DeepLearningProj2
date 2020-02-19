@@ -25,7 +25,7 @@ KFoldCV <- function( X_mat, y_vec, ComputePredictions, fold_vec )
   }
   
   #return error_vec
-  error_Vec
+  error_vec
 }
 
 
@@ -48,7 +48,6 @@ NearestNeighborsCV <- function( X_mat, y_vec, X_new, num_folds = 5, max_neighbor
                            knn(X_train, X_new, y_train, k = num_neighbors)
                          },
                          validation_fold_vec )
-    
     #append error_vec to error_mat (column wise)
     error_mat[,num_neighbors] <- error_vec
   }
@@ -60,7 +59,7 @@ NearestNeighborsCV <- function( X_mat, y_vec, X_new, num_folds = 5, max_neighbor
   best_neighbors <- which.min( mean_error_vec )
   
   #predict new labels
-  pred_new <- knn( X_train, X_new, y_train, k = best_neighbors )
+  pred_new <- knn( X_mat, X_new, y_vec, k = best_neighbors )
   
   #return
   list( pred_new, mean_error_vec, error_mat )
