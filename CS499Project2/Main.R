@@ -43,13 +43,14 @@ main <- function()
   #put in legend
   neighbors <- 1:20
   validation.numneighbors<-ggplot()+
-    geom_line(aes(x=neighbors, y=mean_error_vec),size=2)+#data may change might create a labeled table
-    geom_point(aes(x=which.min(mean_error_vec),min(mean_error_vec), color = 'red', size = 2))+
-    geom_line(aes(x=neighbors, y = error_mat[1,]))+
-    geom_line(aes(x=neighbors, y = error_mat[2,]))+
-    geom_line(aes(x=neighbors, y = error_mat[3,]))+
-    geom_line(aes(x=neighbors, y = error_mat[4,]))+
-    geom_line(aes(x=neighbors, y = error_mat[5,]))
+    labs(x="Number of Neighbors", y="Error Percent", color = "Error", size = "Point")+ 
+    geom_line(aes(x=neighbors, y=mean_error_vec,color ="Mean Error"), size=2)+
+    geom_point(aes(x=which.min(mean_error_vec),y=min(mean_error_vec), size = "Min Mean Error" ),color = "red")+
+    geom_line(aes(x=neighbors, y = error_mat[1,],color ="First Fold Error"))+
+    geom_line(aes(x=neighbors, y = error_mat[2,],color ="Second Fold Error"))+
+    geom_line(aes(x=neighbors, y = error_mat[3,],color ="Third Fold Error"))+
+    geom_line(aes(x=neighbors, y = error_mat[4,],color ="Fourth Fold Error"))+
+    geom_line(aes(x=neighbors, y = error_mat[5,],color ="Fifth Fold Error"))
     #+#concludes project min
     #geom_line(aes(x=neighbors, y=percent.error, data=error_mat, group=fold))# need to create table from error_mat use as data
   #alternative extract a vector and graph for each fold
@@ -101,11 +102,7 @@ main <- function()
                                                         pred_new
                                                       },
                                  test_fold_vec )
-  #create respective dotplot
-  baseline.dot.plot<-ggplot()+
-    geom_point(aes(x=1:4, y=baseline_error_vec))
-  #display
-  print(baseline.dot.plot)
+
   
   #calc error using NN algorithm
   NN_error_vec <- KFoldCV( X_mat,
@@ -117,12 +114,7 @@ main <- function()
                                                 },
                            test_fold_vec )
   
-  #create respective dotplot
-  NN.dot.plot<-ggplot()+
-    geom_point(aes(x=1:4, y=NN_error_vec))
-  
-  #display
-  print(NN.dot.plot)
+
   
   #calc error using knn with k = 1
   knn_error_vec <- KFoldCV( X_mat,
@@ -134,11 +126,44 @@ main <- function()
                                                  },
                             test_fold_vec
                             )
+ 
+
+ test<-rbind(baseline_error_vec,NN_error_vec,knn_error_vec)
+
+  
+#create respective dotplot
+dot.plot<-ggplot()+
+  labs(x="test error", y="Algorithm",color="Algorithm")+
+  scale_y_discrete(name ="Algorithm", breaks=seq(1,2,3), limits= c(0,5))+
+  geom_point(aes(x=test[1,1:4], y=1,color="Baseline"))+
+  geom_point(aes(x=test[2,1:4], y=2,color="NearestNeighbors"))+
+  geom_point(aes(x=test[3,1:4], y=3,color="OneNearestNeighbors"))
+
+  
+#display
+print(dot.plot)
+
+
+
+
+  #create respective dotplot
+  baseline.dot.plot<-ggplot()+
+    geom_point(aes(x=1:4, y=baseline_error_vec))
+  #display
+  print(baseline.dot.plot)
+  
+  #create respective dotplot
+  NN.dot.plot<-ggplot()+
+    geom_point(aes(x=1:4, y=NN_error_vec))
+  
+  #display
+  print(NN.dot.plot)
   
   #create respective dotplot
   knn.dot.plot<-ggplot()+
     geom_point(aes(x=1:4, y=knn_error_vec)) 
 
+ 
   #display
   print(knn.dot.plot)
 }
