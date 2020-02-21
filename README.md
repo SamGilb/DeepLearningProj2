@@ -9,7 +9,7 @@ Install these libraries for RStudio using install.packages()
 * data.table
 * weightedROC
 
-#To Run Our Code
+# To Run Our Code
 To ensure expected behavior download all of the files and open them in RStudio
 
 For each file
