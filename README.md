@@ -18,4 +18,4 @@ For each file
 
 Saving the Main.R file for last
 
-When you get to the Main.R file follow the aforementioned steps and the program should run and plot
+When you get to the Main.R file follow the aforementioned steps and the program should run and produce similar plots
